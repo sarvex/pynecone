@@ -1,3 +1,4 @@
+import "../styles/globals.css"
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import theme from "/utils/theme";
