@@ -42,6 +42,9 @@ class Component(Base, ABC):
     # A unique key for the component.
     key: Any = None
 
+    # The class name of the component.
+    class_name: str = ""
+
     @classmethod
     def __init_subclass__(cls, **kwargs):
         """Set default properties.
@@ -330,7 +333,12 @@ class Component(Base, ABC):
         """
         tag = self._render()
         return str(
-            tag.add_props(**self.event_triggers, key=self.key, sx=self.style).set(
+            tag.add_props(
+                **self.event_triggers,
+                class_name=self.class_name,
+                key=self.key,
+                sx=self.style,
+            ).set(
                 contents=utils.join(
                     [str(tag.contents)] + [child.render() for child in self.children]
                 ),
