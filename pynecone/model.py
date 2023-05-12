@@ -17,10 +17,10 @@ def get_engine():
     Raises:
         ValueError: If the database url is None.
     """
-    url = get_config().db_url
-    if not url:
+    if url := get_config().db_url:
+        return sqlmodel.create_engine(url, echo=False)
+    else:
         raise ValueError("No database url in config")
-    return sqlmodel.create_engine(url, echo=False)
 
 
 class Model(Base, sqlmodel.SQLModel):
@@ -31,12 +31,12 @@ class Model(Base, sqlmodel.SQLModel):
 
     def __init_subclass__(cls):
         """Drop the default primary key field if any primary key field is defined."""
-        non_default_primary_key_fields = [
+        if non_default_primary_key_fields := [
             field_name
             for field_name, field in cls.__fields__.items()
-            if field_name != "id" and getattr(field.field_info, "primary_key", None)
-        ]
-        if non_default_primary_key_fields:
+            if field_name != "id"
+            and getattr(field.field_info, "primary_key", None)
+        ]:
             cls.__fields__.pop("id", None)
 
         super().__init_subclass__()

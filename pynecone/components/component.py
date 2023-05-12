@@ -465,9 +465,7 @@ class Component(Base, ABC):
             The hooks for just this component.
         """
         ref = self.get_ref()
-        if ref is not None:
-            return f"const {ref} = useRef(null);"
-        return None
+        return f"const {ref} = useRef(null);" if ref is not None else None
 
     def get_hooks(self) -> Set[str]:
         """Get the React hooks for this component and its children.
@@ -495,9 +493,7 @@ class Component(Base, ABC):
         Returns:
             The ref name.
         """
-        if self.id is None:
-            return None
-        return format.format_ref(self.id)
+        return None if self.id is None else format.format_ref(self.id)
 
     def get_custom_components(
         self, seen: Optional[Set[str]] = None
